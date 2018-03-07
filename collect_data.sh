@@ -4,6 +4,7 @@ set -euo pipefail
 AWS_OPTS="--output json"
 account=""
 profile=""
+region=""
 ERROR=""
 
 function usage {
@@ -30,6 +31,11 @@ do
       ;;
     --profile)
       profile="$2"
+      shift
+      shift
+      ;;
+    --region)
+      region="$2"
       shift
       shift
       ;;
@@ -78,7 +84,11 @@ mkdir -p "$account"
 cd $account
 
 echo "* Getting region names"
-aws $AWS_OPTS ec2 describe-regions > describe-regions.json
+if [[ -z "$region" ]] ; then
+	aws $AWS_OPTS ec2 describe-regions > describe-regions.json
+else
+	aws $AWS_OPTS ec2 describe-regions --region-names $region > describe-regions.json
+fi
 # Create directory for each region name
 cat describe-regions.json | jq -r '.Regions[].RegionName' | xargs -I{} sh -c 'mkdir -p $1' -- {}
 
