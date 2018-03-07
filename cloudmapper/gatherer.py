@@ -32,7 +32,10 @@ def gather(arguments):
     session = boto3.Session(**session_data)
     ec2 = session.client('ec2')
 
-    region_list = ec2.describe_regions()
+    if arguments.region_name:
+        region_list = ec2.describe_regions(RegionNames=[arguments.region_name])
+    else:
+        region_list = ec2.describe_regions()
     with open("{}/describe-regions.json".format(account_dir), 'w+') as f:
         f.write(json.dumps(region_list, indent=4, sort_keys=True))
 

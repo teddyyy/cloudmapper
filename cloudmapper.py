@@ -55,6 +55,8 @@ def run_gathering(arguments):
                         required=False, type=str)
     parser.add_argument("--profile-name", help="AWS profile name",
                         required=False, type=str)
+    parser.add_argument("--region-name", help="AWS region name",
+                        required=False, type=str)
     parser.add_argument('--clean', help='Remove any existing data for the account before gathering', action='store_true')
 
     args = parser.parse_args(arguments)
